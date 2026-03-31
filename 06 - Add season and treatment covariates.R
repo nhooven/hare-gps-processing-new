@@ -128,32 +128,32 @@ lookup.year <- cbind(
     end = c(
       
       # PRE
+      ymd("2023-10-12", tz = "America/Los_Angeles"),
       ymd("2023-10-11", tz = "America/Los_Angeles"),
-      ymd("2023-10-10", tz = "America/Los_Angeles"),
-      ymd("2023-10-04", tz = "America/Los_Angeles"),
+      ymd("2023-10-05", tz = "America/Los_Angeles"),
+      ymd("2023-10-07", tz = "America/Los_Angeles"),
       ymd("2023-10-06", tz = "America/Los_Angeles"),
       ymd("2023-10-05", tz = "America/Los_Angeles"),
       ymd("2023-10-04", tz = "America/Los_Angeles"),
-      ymd("2023-10-03", tz = "America/Los_Angeles"),
       ymd("2023-10-05", tz = "America/Los_Angeles"),
-      ymd("2023-10-04", tz = "America/Los_Angeles"),
+      ymd("2023-10-05", tz = "America/Los_Angeles"),
+      ymd("2023-10-10", tz = "America/Los_Angeles"),
       ymd("2023-10-09", tz = "America/Los_Angeles"),
-      ymd("2023-10-08", tz = "America/Los_Angeles"),
-      ymd("2023-10-04", tz = "America/Los_Angeles"),
+      ymd("2023-10-05", tz = "America/Los_Angeles"),
       
       # POST1
+      ymd("2024-10-12", tz = "America/Los_Angeles"),
       ymd("2024-10-11", tz = "America/Los_Angeles"),
-      ymd("2024-10-10", tz = "America/Los_Angeles"),
-      ymd("2024-10-04", tz = "America/Los_Angeles"),
+      ymd("2024-10-05", tz = "America/Los_Angeles"),
+      ymd("2024-10-07", tz = "America/Los_Angeles"),
       ymd("2024-10-06", tz = "America/Los_Angeles"),
       ymd("2024-10-05", tz = "America/Los_Angeles"),
       ymd("2024-10-04", tz = "America/Los_Angeles"),
-      ymd("2024-10-03", tz = "America/Los_Angeles"),
       ymd("2024-10-05", tz = "America/Los_Angeles"),
-      ymd("2024-10-04", tz = "America/Los_Angeles"),
+      ymd("2024-10-05", tz = "America/Los_Angeles"),
+      ymd("2024-10-10", tz = "America/Los_Angeles"),
       ymd("2024-10-09", tz = "America/Los_Angeles"),
-      ymd("2024-10-08", tz = "America/Los_Angeles"),
-      ymd("2024-10-04", tz = "America/Los_Angeles"),
+      ymd("2024-10-05", tz = "America/Los_Angeles"),
       
       # POST2 (all the same)
       rep(ymd("2025-11-01", tz = "America/Los_Angeles"), 12)
@@ -255,6 +255,9 @@ tbl.gps.clean3 <- tbl.gps.clean2.df %>%
 # ______________________________________________________________________________
 # 5. Add to database ----
 # ______________________________________________________________________________
+
+# drop table if needed
+dbExecute(db.gps, "DROP TABLE gps_clean3;")
 
 str(tbl.gps.clean3)
 

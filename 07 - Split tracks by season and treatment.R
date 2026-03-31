@@ -3,13 +3,13 @@
 # AUTHOR: Nate Hooven
 # EMAIL: nathan.d.hooven@gmail.com
 # BEGAN: 31 Mar 2026
-# COMPLETED: 
+# COMPLETED: 31 Mar 2026
 # MODIFIED: 31 Mar 2026
 # R VERSION: 4.4.3
 
-#_______________________________________________________________________________________________
+#_______________________________________________________________________________
 # 1. Load required packages ----
-#_______________________________________________________________________________________________
+#_______________________________________________________________________________
 
 library(tidyverse)
 library(DBI)
@@ -54,12 +54,15 @@ tbl.gps.clean4 <- tbl.gps.clean3 %>%
 # tabulate
 length(unique(tbl.gps.clean4$trackID))             # 127 tracks
 length(unique(tbl.gps.clean4$track_season))        # 186
-length(unique(tbl.gps.clean4$track_season_year))   # 243
-length(unique(tbl.gps.clean4$track_season_post))   # 217
+length(unique(tbl.gps.clean4$track_season_year))   # 221
+length(unique(tbl.gps.clean4$track_season_post))   # 210
 
 # ______________________________________________________________________________
 # 4. Add to database ----
 # ______________________________________________________________________________
+
+# drop table if needed
+dbExecute(db.gps, "DROP TABLE gps_clean4;")
 
 str(tbl.gps.clean4)
 

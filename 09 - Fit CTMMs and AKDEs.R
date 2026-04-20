@@ -4,7 +4,7 @@
 # EMAIL: nathan.d.hooven@gmail.com
 # BEGAN: 31 Mar 2026
 # COMPLETED: 31 Mar 2026
-# MODIFIED: 31 Mar 2026
+# MODIFIED: 20 Apr 2026
 # R VERSION: 4.4.3
 
 #_______________________________________________________________________________
@@ -19,12 +19,8 @@ library(sf)
 library(terra)
 
 # ______________________________________________________________________________
-# 2. Data locations ----
+# 2. Read in data ----
 # ______________________________________________________________________________
-
-# directories
-# GPS data
-dir.gps <- "D:/hare_project/data_gps/"
 
 # establish connection
 db.gps <- dbConnect(SQLite(), "database/gps.db")
@@ -129,7 +125,9 @@ for (i in 1:length(unique(tbl.gps$track_season_post))) {
   all.model.select[[i]] <- cbind(
     
     as.data.frame(summary(focal.mods)), 
-    data.frame("track_season_post" = focal.data$track_season_post[1])
+    data.frame("track_season_post" = focal.data$track_season_post[1]),
+    mod = 1:nrow(summary(focal.mods)),
+    i
     
     )
   
@@ -160,6 +158,26 @@ for (i in 1:length(unique(tbl.gps$track_season_post))) {
   
 }
 
+# save selection summaries (critical for the next step!)
+all.model.select.df <- data.frame()
+
+for (i in 1:length(all.model.select)) {
+  
+  focal.select <- all.model.select[[i]]
+  
+  if (is.null(ncol(focal.select)) == F) {
+    
+    names(focal.select) <- c("dAICc", "dRMSPE", "DOF", "track_season_post", "mod", "i")
+    
+    # bind in
+    all.model.select.df <- rbind(all.model.select.df, focal.select)
+    
+  }
+  
+}
+
+saveRDS(all.model.select.df, "data_cleaned/all_model_select.rds")
+
 # ______________________________________________________________________________
 # 3c. Model selection ----
 # ______________________________________________________________________________
@@ -170,9 +188,9 @@ which.na.model.select <- which(is.na(all.model.select))
 # ensure names are the same
 change_names <- function (x) {
   
-  if (length(names(x)) == 4) {
+  if (length(names(x)) == 6) {
   
-  names(x) <- c("dAICc", "dRMSPE", "DOF[area]", "track_season_post")
+  names(x) <- c("dAICc", "dRMSPE", "DOF[area]", "track_season_post", "mod", "i")
   
   x$model <- rownames(x)
   
@@ -188,10 +206,10 @@ change_names <- function (x) {
 
 all.model.select.1 <- lapply(all.model.select, change_names)
 
-all.model.select.df <- do.call(rbind, all.model.select.1[-which.na.model.select])
+all.model.select.1.df <- do.call(rbind, all.model.select.1[-which.na.model.select])
 
 # keep only the top model and count
-all.model.select.df %>%
+all.model.select.1.df %>%
   
   filter(dAICc == 0) %>%
   
@@ -379,7 +397,7 @@ for (i in 1:length(unique(tbl.gps$track_season_post))) {
 # 5c. Write to file ----
 # ______________________________________________________________________________
 
-st_write(all.contours, "data_cleaned/spatial/all_contours.shp")
+st_write(all.contours, "data_cleaned/spatial/all_contours.shp", append = F)
 
 saveRDS(all.akde, "data_cleaned/all_akde.rds")
 
